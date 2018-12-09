@@ -1,4 +1,4 @@
-import sys
+import sys  # Do not know of a module independant way of parsing cmd args
 
 from stringshifter.patterns import *
 from stringshifter.utils import check_divisibility, check_string_validity, check_num, shift_string, map_case, \
@@ -6,8 +6,12 @@ from stringshifter.utils import check_divisibility, check_string_validity, check
 
 
 class StringShifter:
+    """
+    Main API into the library
+    """
     # divisibility as class level attribute [could be changed to user input but not mentioned]
     divisibility=3
+    # Consts for printing
     RC="CONTIGUOUS PATTERN RUN RECURSIVELY"
     RNC="CONTIGUOUS PATTERN RUN NON RECURSIVELY"
     NRNC="NON CONTIGUOUS PATTERN RUN NON RECURSIVELY"
@@ -19,9 +23,9 @@ class StringShifter:
         self.check_preconditions()
         self.Cshift = self.get_shift()
         self.divide_S()
-        self.verbose = True
+        self.verbose = True  #remove noise during testing
 
-
+    #region utility
     def get_shift(self):
         c = map_case(self.C)
         return  convert_to_input_case(shift_string(self.C,self.N),c)
@@ -37,6 +41,19 @@ class StringShifter:
         check_string_validity(self.C)
         check_divisibility(self.S, StringShifter.divisibility)
 
+    def print_out(self, algo):
+        if not self.verbose:
+            return  # Executed while testing
+        print(algo)
+        print("----------------------------------------")
+        print("C:      {}".format(self.C))
+        print("CShift: {}".format(self.Cshift))
+        print("S:      {}".format(self.S))
+        print("SShift: {}".format(self.S_replaced))
+        print("----------------------------------------")
+
+    #end region utility
+
     def run_non_recursive_contiguous(self):
 
         self.S_replaced= pattern_replace_non_recursive(self.S_first,self.S_second,self.C,self.Cshift)
@@ -51,16 +68,7 @@ class StringShifter:
     def run_recursive_non_contiguous(self):
         self.S_replaced = non_contigious_right_replace_recursive(self.S_first, self.S_second, self.C, self.Cshift)
         self.print_out(StringShifter.NRC)
-    def print_out(self,algo):
-        if not self.verbose:
-            return
-        print(algo)
-        print("----------------------------------------")
-        print("C:      {}".format(self.C))
-        print("CShift: {}".format(self.Cshift))
-        print("S:      {}".format(self.S))
-        print("SShift: {}".format(self.S_replaced))
-        print("----------------------------------------")
+
 
 def run_shifter(S,C,N,noncont):
     try:
@@ -71,7 +79,7 @@ def run_shifter(S,C,N,noncont):
         else:
             s.run_non_recursive_contiguous()
             s.run_recursive_contiguous()
-    except Exception as e:
+    except Exception as e:  #Print all user errors
         print("Error: {}".format(str(e)))
         print("\n")
         #print(str(e))
@@ -101,11 +109,11 @@ def main(**kwargs):
             N = int_try_parse(kwargs['N'])
             R= True if (kwargs['R']).lower()=="y" else False
             run_shifter(S, C, N, R)
-    except KeyboardInterrupt:
+    except KeyboardInterrupt:  #Case for exiting program
         print("\n")
         print("Exiting")
         return 0
-    except Exception as e:
+    except Exception as e:  #Log all non recoverable errors
         print("\n")
         print('Unrecoverable Error')
         print(str(e))
