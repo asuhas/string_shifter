@@ -26,10 +26,27 @@ def non_contigious_right_replace_non_recursive(left,right,left_pattern,right_pat
         l_arr.append(range(index,offset))
         r_arr.append(valid_power_set[-1])
         valid_power_set.pop()
-        index, offset = _get_index_offset(left, left_pattern, index)
+        index, offset = _get_index_offset(left, left_pattern, offset)
     replacement = replace_for_non_contigous(left,right,right_pattern,left_pattern,l_arr,r_arr)
     return replacement
 
+
+def non_contigious_right_replace_recursive(left, right, left_pattern, right_pattern):
+    ps = generate_power_set(range(get_len(right)), get_len(right_pattern))
+    valid_power_set = _generate_pattern_list(right, right_pattern, ps)
+    larr, rarr = _fill_non_contiguous_pattern_array_rex(left, left_pattern, [], [], 0, valid_power_set)
+    replacement = replace_for_non_contigous(left, right, right_pattern, left_pattern, larr, rarr)
+    return replacement
+
+
+def _fill_non_contiguous_pattern_array_rex(left, left_pattern, larr, rarr, loff, validpowerset):
+    index, offset = _get_index_offset(left, left_pattern, loff)
+    if index != -1 and validpowerset:
+        larr.append(range(index, offset))
+        rarr.append(validpowerset.pop())
+        return _fill_non_contiguous_pattern_array_rex(left, left_pattern, larr, rarr, offset, validpowerset)
+    else:
+        return larr, rarr
 
 def _get_index_offset(string,pattern,index):
     p = find_index(string,pattern,index)
@@ -65,12 +82,12 @@ def pattern_replace_non_recursive(left, right, left_pattern, right_pattern):
 
 
 if __name__ == "__main__":
-    left = "ABCDEF"
-    right = "GHBXCD"
+    left = "ABCABC"
+    right = "BCDBCDBCDBCD"
     lp = "ABC"
     rp = "BCD"
     print(non_contigious_right_replace_non_recursive(left, right, lp, rp))
-    print(pattern_replace_recursive(left, right, lp, rp))
+    # print(pattern_replace_recursive(left, right, lp, rp))
     # s="AAABBBCCC"
     # p="ABC"
     # ps = generate_power_set(range(len(s)),len(p))
