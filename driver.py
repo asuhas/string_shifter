@@ -67,6 +67,7 @@ def run_shifter(S,C,N,noncont):
         s = StringShifter(S,C,N)
         if noncont:
             s.run_non_recursive_non_contiguous()
+            s.run_recursive_non_contiguous()
         else:
             s.run_non_recursive_contiguous()
             s.run_recursive_contiguous()
