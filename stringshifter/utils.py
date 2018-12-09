@@ -8,8 +8,14 @@ def shift_string(s,n):
     # convert back to valid ascii level using %26
     #convert to char
     #append
-    return ''.join(chr((ord(char) - ascii_a + mod) %26 + ascii_a) for char in s.lower())
+    return array_to_str([chr((ord(char) - ascii_a + mod) % 26 + ascii_a) for char in s.lower()])
 
+
+def array_to_str(my_list):
+    string = str(my_list.pop(0))
+    while my_list:
+        string += str(my_list.pop(0))
+    return string
 
 def check_num(n):
     '''
@@ -61,7 +67,7 @@ def convert_to_input_case(s,case_map):
             j[i]=q.upper()
         else:
             j[i] = q
-    return ''.join(j)
+    return array_to_str(j)
 
 def join_string(a,b):
     len_a = get_len(a)
@@ -74,7 +80,7 @@ def join_string(a,b):
         else:
             k = abs(len_a-i)
             l[i]=b[k]
-    return "".join(l)
+    return array_to_str(l)
 
 def check_divisibility(s,n):
     if get_len(s)%n is not 0:
@@ -115,7 +121,7 @@ def replace_in_string(a,b,p_a,p_b,l_a,l_b):
                     b_replaced=0
             else:
                 l[i]=b[k]
-    return "".join(l)
+    return array_to_str(l)
 
 def replace_for_non_contigous(a,b,p_a,p_b,l_a,l_b):
     a_n= a
@@ -132,7 +138,7 @@ def _r(a,b,r):
         if i in r:
             j[i]=b[q]
             q+=1
-    return "".join(j)
+    return array_to_str(j)
 
 def generate_power_set(set,set_size):
     x = get_len(set)
